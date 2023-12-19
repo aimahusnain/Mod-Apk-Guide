@@ -5,6 +5,7 @@ import Header from "@/src/components/Header";
 import Footer from "../components/Footer";
 import siteMetadata from "../utils/siteMetaData";
 import ThemeScript from "../components/ThemeScript";
+import ThemeProvider from '@/src/providers/theme-provider'
 
 const inter = Inter({
   subsets: ["latin"],
@@ -63,10 +64,11 @@ export default function RootLayout({ children }) {
           "font-mr bg-light dark:bg-dark"
         )}
       >
-        <ThemeScript />
-        <Header />
-        {children}
-        <Footer />
+        <ThemeProvider>
+          <Header />
+          {children}
+          <Footer />
+        </ThemeProvider>
       </body>
     </html>
   );
