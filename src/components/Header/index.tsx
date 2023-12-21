@@ -1,78 +1,114 @@
-"use client"
+"use client";
+import {
+  NavigationMenu,
+  NavigationMenuContent,
+  NavigationMenuItem,
+  NavigationMenuLink,
+  NavigationMenuList,
+  NavigationMenuTrigger,
+  navigationMenuTriggerStyle,
+} from "@/src/components/ui/navigation-menu";
 import Link from "next/link";
-import Logo from "./Logo";
-import { DribbbleIcon, GithubIcon, LinkedinIcon, MoonIcon, SunIcon, TwitterIcon } from "../Icons";
-import siteMetadata from "@/src/utils/siteMetaData";
-import { useState } from "react";
-import { cx } from "@/src/utils";
+import { Button } from "../ui/Button";
+import MobileSidebar from "./MobileSidebar";
+import { useEffect, useState } from "react";
+import { navData } from "../../utils/StaticData";
 import ThemeToggler from "../theme";
+import SkeletonNavBar from "./SkeletonNavbar"; // Import the Skeleton NavBar component
 
-const Header = () => {
+const NavBar = () => {
+  const [isMobile, setIsMobile] = useState(false);
+  const [isLoading, setIsLoading] = useState(true); // Start with isLoading set to true
+  const [sticky, setSticky] = useState<boolean>(false);
 
-  const [click, setClick] = useState(false);
+  function handleStickyNavbar() {
+    if (window.scrollY >= 80) setSticky(true);
+    else setSticky(false);
+  }
 
-const toggle = () =>{
-  setClick(!click)
-}
+  useEffect(() => {
+    window.addEventListener("scroll", handleStickyNavbar);
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+
+    handleResize();
+    window.addEventListener("resize", handleResize);
+
+    setTimeout(() => {
+      setIsLoading(false); // After a delay, set isLoading to false to show the actual NavBar
+    }, 100); // Adjust the delay time as needed (1000 milliseconds = 1 second)
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
   return (
-    <header className="w-full p-4  px-5 sm:px-10 flex items-center justify-between">
-        <Logo />
+    <div
+    className={`top-0 shadow-lg left-0 z-40 flex w-full items-center bg-transparent
+    ${
+      sticky
+      ? "fixed z-[9999] bg-zinc-200 bg-opacity-30 backdrop-blur-sm shadow-sticky backdrop:blur-sm transition transform translate-y-0"
+      : ""
+    } 
+    `}
+    >
+      {isLoading ? (
+        <SkeletonNavBar />
+      ) : (
+        <header className="w-full h-fit py-4 px-4 md:px-14 flex justify-between items-center">
+          <Link href="/" className="font-mono">
+            <h3 className="text-3xl font-bold">Logo</h3>
+          </Link>
 
-        <button className="inline-block sm:hidden z-50" onClick={toggle} aria-label="Hamburger Menu">
-          <div className="w-6 cursor-pointer transition-all ease duration-300">
-            <div className="relative">
-            <span className="absolute top-0 inline-block w-full h-0.5 bg-dark dark:bg-light rounded transition-all ease duration-200" 
-            style={{
-             transform: click ? "rotate(-45deg) translateY(0)" : "rotate(0deg) translateY(6px)"
-            }}
-            
-            >&nbsp;</span>
-            <span className="absolute top-0 inline-block w-full h-0.5 bg-dark dark:bg-light rounded transition-all ease duration-200"
-            style={{
-              opacity: click ? 0 : 1
-             }}
-            >&nbsp;</span>
-            <span className="absolute top-0 inline-block w-full h-0.5 bg-dark dark:bg-light rounded transition-all ease duration-200"
-            style={{
-              transform: click ? "rotate(45deg) translateY(0)" : "rotate(0deg) translateY(-6px)"
-             }}
-            >&nbsp;</span>
+          {isMobile && <MobileSidebar />}
+
+          {!isMobile && (
+            <NavigationMenu>
+              <NavigationMenuList className="md:flex md:space-x-4">
+                {Object.entries(navData).map(([category, items], index) => (
+                  <NavigationMenuItem key={index}>
+                    {Array.isArray(items) ? (
+                      <NavigationMenuTrigger>{category}</NavigationMenuTrigger>
+                    ) : (
+                      <Link href={items.link} legacyBehavior passHref>
+                        <NavigationMenuLink
+                          className={`${navigationMenuTriggerStyle()}`}
+                        >
+                          {items.text}
+                        </NavigationMenuLink>
+                      </Link>
+                    )}
+                    {Array.isArray(items) && (
+                      <NavigationMenuContent className="md:w-[400px] lg:w-[500px] lg:flex lg:flex-col lg:space-y-3">
+                        <ul className="grid gap-3 p-6 md:grid-cols-2 lg:grid-cols-3">
+                          {items.map((item, itemIndex) => (
+                            <li key={itemIndex}>
+                              <Link href={`/categories${item.link}`}>{item.text}</Link>
+                            </li>
+                          ))}
+                        </ul>
+                      </NavigationMenuContent>
+                    )}
+                  </NavigationMenuItem>
+                ))}
+              </NavigationMenuList>
+            </NavigationMenu>
+          )}
+
+          {!isMobile && (
+            <div className="flex items-center gap-5">
+              <ThemeToggler />
+              <Link href="sign-up">
+                <Button>Sign Up</Button>
+              </Link>
             </div>
+          )}
+        </header>
+      )}
+    </div>
+  );
+};
 
-          </div>
-        </button>
-
-        <nav className=" w-max py-3 px-6 sm:px-8 border border-solid border-dark rounded-full font-medium capitalize  items-center flex  sm:hidden
-        fixed top-6 right-1/2 translate-x-1/2 bg-light/80 backdrop-blur-sm z-50
-        transition-all ease duration-300
-        "
-        style={{
-          top: click ? "1rem" : "-5rem"
-         }}
-        
-        >
-            <Link href="/" className="mr-2">Home</Link>
-            <Link href="/about" className="mx-2">About</Link>
-            <Link href="/contact" className="mx-2">Contact</Link>
-            <ThemeToggler />
-        </nav>
-
-
-        <nav className=" w-max py-3 px-8 border border-solid border-dark rounded-full font-medium capitalize  items-center hidden sm:flex
-        fixed top-6 right-1/2 translate-x-1/2 bg-light/80 backdrop-blur-sm z-50">
-            <Link href="/" className="mr-2">Home</Link>
-            <Link href="/about" className="mx-2">About</Link>
-            <Link href="/contact" className="mx-2">Contact</Link>
-            <ThemeToggler />
-        </nav>
-        <div className=" hidden sm:flex items-center">
-            <a href={siteMetadata.linkedin} className="inline-block w-6 h-6 mr-4" aria-label="Reach out to me via LinkedIn" target="_blank"><LinkedinIcon className="hover:scale-125 transition-all ease duration-200" /></a>
-            <a href={siteMetadata.twitter} className="inline-block w-6 h-6 mr-4" aria-label="Reach out to me via Twitter" target="_blank"><TwitterIcon className="hover:scale-125 transition-all ease duration-200" /></a>
-            <a href={siteMetadata.github} className="inline-block w-6 h-6 mr-4" aria-label="Check my profile on Github" target="_blank"><GithubIcon className="  hover:scale-125 transition-all ease duration-200 dark:fill-light" /></a>
-            <a href={siteMetadata.dribbble} className="inline-block w-6 h-6 mr-4" aria-label="Check my profile on Dribbble" target="_blank"><DribbbleIcon className="hover:scale-125 transition-all ease duration-200" /></a>
-        </div>
-    </header>
-  )
-}
-
-export default Header;
+export default NavBar;
