@@ -15,6 +15,9 @@ import { useEffect, useState } from "react";
 import { navData } from "../../utils/StaticData";
 import ThemeToggler from "../theme";
 import SkeletonNavBar from "./SkeletonNavbar"; // Import the Skeleton NavBar component
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/src/lib/auth";
+import SignButton from "./SignButton";
 
 const NavBar = () => {
   const [isMobile, setIsMobile] = useState(false);
@@ -100,9 +103,8 @@ const NavBar = () => {
           {!isMobile && (
             <div className="flex items-center gap-5">
               <ThemeToggler />
-              <Link href="sign-up">
-                <Button>Sign Up</Button>
-              </Link>
+
+              <SignButton />
             </div>
           )}
         </header>

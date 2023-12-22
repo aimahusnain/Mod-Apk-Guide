@@ -5,7 +5,9 @@ import Header from "@/src/components/Header";
 import Footer from "../components/Footer";
 import siteMetadata from "../utils/siteMetaData";
 import ThemeScript from "../components/ThemeScript";
-import ThemeProvider from '@/src/providers/theme-provider'
+import ThemeProvider from "@/src/providers/theme-provider";
+import NextAuthProvider from "@/src/providers/next-auth-provider";
+import Providers from "@/src/components/Providers";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -64,11 +66,15 @@ export default function RootLayout({ children }) {
           "px-6 font-mr bg-light dark:bg-dark"
         )}
       >
-        <ThemeProvider>
-          <Header />
-          {children}
-          <Footer />
-        </ThemeProvider>
+        <Providers>
+          <NextAuthProvider>
+            <ThemeProvider>
+              <Header />
+              {children}
+              <Footer />
+            </ThemeProvider>
+          </NextAuthProvider>
+        </Providers>
       </body>
     </html>
   );
