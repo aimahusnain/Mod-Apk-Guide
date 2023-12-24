@@ -1,7 +1,9 @@
 import BlogDetails from "@/src/components/Blog/BlogDetails";
 import RenderMdx from "@/src/components/Blog/RenderMdx";
+import Tag from "@/src/components/Elements/Tag";
 import siteMetadata from "@/src/utils/siteMetaData";
 import { allBlogs } from "contentlayer/generated";
+import { slug } from "github-slugger";
 import { Facebook, LucideTwitter } from "lucide-react";
 import Link from "next/link";
 import { FaWhatsapp } from "react-icons/fa";
@@ -122,12 +124,11 @@ export default function BlogPage({ params }) {
                 Role Playing
               </a>
               /
-              <a
-                href="/"
-                className="p-0 hover:underline underline-green-500 border-[#68CB5B] text-[#68CB5B]"
-              >
-                Immortal
-              </a>
+              <Tag
+              name={blog.tags[0]}
+              link={`/categories/${slug(blog.tags[0])}`}
+              className=""
+            />
             </div>
             <h1 className="text-2xl font-bold">{blog.title}</h1>
 
@@ -139,24 +140,31 @@ export default function BlogPage({ params }) {
             </p>
             <div className="flex gap-5 p-3">
               <Link href="/" className="w-5 h-7">
-                <Facebook className="w-full h-full" />
+                <Facebook className="w-full h-full hover:text-emerald-500 transition-all" />
               </Link>
               <Link href="/" className="w-5 h-7">
-                <LucideTwitter className="w-full h-full" />
+                <LucideTwitter className="w-full h-full hover:text-emerald-500 transition-all" />
               </Link>
               <Link href="/" className="w-5 h-7">
-                <FaXTwitter className="w-full h-full" />
+                <FaXTwitter className="w-full h-full hover:text-emerald-500 transition-all" />
               </Link>
               <Link href="/" className="w-5 h-7">
-                <FaWhatsapp className="w-full h-full" />
+                <FaWhatsapp className="w-full h-full hover:text-emerald-500 transition-all" />
               </Link>
             </div>
-            <button className="px-3 py-2 bg-emerald-500 text-white text-xs font-bold uppercase rounded">
+            <button className="transition-all hover:bg-emerald-700 p-3 bg-emerald-500 text-white font-bold uppercase text-xl rounded-md mt-3">
               Download
             </button>
           </div>
         </div>
-            <BlogDetails blog={blog} slug={params.slug} />
+        <div>
+          <BlogDetails blog={blog} slug={params.slug} />
+          <div className="w-full h-fit flex justify-center items-center">
+            <button className="transition-all px-12 mt-6 hover:bg-emerald-700 p-3 bg-emerald-500 text-white font-bold uppercase text-xl rounded-full">
+              Download
+            </button>
+          </div>
+        </div>
       </div>
       {/* <article>
         <div className="mb-8 text-center relative w-full h-[70vh] bg-dark">
