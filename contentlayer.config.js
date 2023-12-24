@@ -40,6 +40,9 @@ const Blog = defineDocumentType(() => ({
       type: "list",
       of: { type: "string" },
     },
+    jfkFeatured: {
+      type: "boolean",
+    },
   },
   computedFields: {
     url: {

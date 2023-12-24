@@ -35,6 +35,17 @@ const UserAuth = () => {
       setIsLoading(false);
     }
   };
+  const loginWithGithub = async () => {
+    setIsLoading(true);
+
+    try {
+      await signIn("github");
+    } catch (error) {
+      console.log("Success");
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <Tabs defaultValue="sign-in" className="w-[400px]">
@@ -61,6 +72,16 @@ const UserAuth = () => {
             >
               {isLoading ? null : <Icons.google className='h-4 w-4 mr-2' />}
               Google
+            </Button>
+
+            <Button
+              isLoading={isLoading}
+              onClick={loginWithGithub}
+              disabled={isLoading}
+              className="w-full"
+            >
+              {isLoading ? null : <Icons.google className='h-4 w-4 mr-2' />}
+              Github
             </Button>
 
             <div className="space-y-1">

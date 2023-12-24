@@ -1,16 +1,17 @@
 generator client {
   provider = "prisma-client-js"
 }
+
 datasource db {
-  provider     = "mongodb"
-  url          = env("DATABASE_URL")
-  relationMode = "prisma"
+  provider = "cockroachdb"
+  url      = env("DATABASE_URL")
 }
 
 enum VoteType {
   UP
   DOWN
 }
+
 model Account {
   id                String  @id @default(cuid()) @map("_id")
   userId            String
@@ -59,7 +60,7 @@ model User {
 
 model Subreddit {
   id        String   @id @default(cuid()) @map("_id")
-  name      String   
+  name      String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   posts     Post[]
@@ -67,9 +68,9 @@ model Subreddit {
   creatorId   String?
   Creator     User?          @relation("CreatedBy", fields: [creatorId], references: [id])
   subscribers Subscription[]
+  // @@index([name])
 
   @@index([name])
-  // @@index([name])
 }
 
 model Subscription {
@@ -82,7 +83,6 @@ model Subscription {
   @@unique([userId, subredditId])
 }
 
-
 model Post {
   id          String    @id @default(cuid()) @map("_id")
   title       String
@@ -93,7 +93,7 @@ model Post {
   authorId    String
   subreddit   Subreddit @relation(fields: [subredditId], references: [id])
   subredditId String
-  comments    Comment[] 
+  comments    Comment[]
   votes       Vote[]
 }
 
@@ -115,24 +115,23 @@ model Comment {
 }
 
 model Vote {
-  id       String   @id @default(cuid()) @map("_id")
-  user     User     @relation(fields: [userId], references: [id])
-  userId   String
-  post     Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
-  postId   String
-  type     VoteType
+  id     String   @id @default(cuid()) @map("_id")
+  user   User     @relation(fields: [userId], references: [id])
+  userId String
+  post   Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  postId String
+  type   VoteType
 
   @@unique([userId, postId, type])
 }
 
-
 model CommentVote {
-  id         String   @id @default(cuid()) @map("_id")
-  user       User     @relation(fields: [userId], references: [id])
-  userId     String
-  comment    Comment  @relation(fields: [commentId], references: [id], onDelete: Cascade)
-  commentId  String
-  type       VoteType
+  id        String   @id @default(cuid()) @map("_id")
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String
+  comment   Comment  @relation(fields: [commentId], references: [id], onDelete: Cascade)
+  commentId String
+  type      VoteType
 
   @@unique([userId, commentId, type])
 }
