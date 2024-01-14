@@ -12,33 +12,6 @@ enum VoteType {
   DOWN
 }
 
-// prisma/schema.prisma
-
-model ClickCount {
-  id      String  @id @default(cuid()) @map("_id")
-  count   Int
-  blog    Post    @relation(fields: [blogId], references: [id])
-  blogId  String
-}
-
-
-// prisma/schema.prisma
-model Review {
-  id       BigInt      @id @default(autoincrement())
-  content  String
-  rating   Int
-  userId   String
-  blogId   Int
-  createdAt DateTime @default(now())
-}
-
-
-model Rating {
-  id       BigInt   @id @default(autoincrement()) // Use BigInt instead of Int
-  value    Int      // The rating value (e.g., 1 to 5)
-  createdAt DateTime @default(now()) // Timestamp for when the rating was created
-}
-
 
 model Account {
   id                String  @id @default(cuid()) @map("_id")

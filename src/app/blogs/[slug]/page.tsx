@@ -27,12 +27,12 @@ export async function generateMetadata({ params }) {
   const modifiedAt = new Date(blog.updatedAt || blog.publishedAt).toISOString();
 
   let imageList = [siteMetadata.socialBanner];
-  if (blog.image) {
-    imageList =
-      typeof blog.image.filePath === "string"
-        ? [siteMetadata.siteUrl + blog.image.filePath.replace("../public", "")]
-        : blog.image;
-  }
+  // if (blog.image) {
+  //   imageList =
+  //     typeof blog.image.filePath === "string"
+  //       ? [siteMetadata.siteUrl + blog.image.filePath.replace("../public", "")]
+  //       : blog.image;
+  // }
   const ogImages = imageList.map((img) => {
     return { url: img.includes("http") ? img : siteMetadata.siteUrl + img };
   });
@@ -69,12 +69,12 @@ export default function BlogPage({ params }) {
   const blog = allBlogs.find((blog) => blog._raw.flattenedPath === params.slug);
 
   let imageList = [siteMetadata.socialBanner];
-  if (blog.image) {
-    imageList =
-      typeof blog.image.filePath === "string"
-        ? [siteMetadata.siteUrl + blog.image.filePath.replace("../public", "")]
-        : blog.image;
-  }
+  // if (blog.image) {
+  //   imageList =
+  //     typeof blog.image.filePath === "string"
+  //       ? [siteMetadata.siteUrl + blog.image.filePath.replace("../public", "")]
+  //       : blog.image;
+  // }
 
   const jsonLd = {
     "@context": "https://schema.org",

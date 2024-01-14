@@ -12,7 +12,7 @@ const ViewCounter = ({ slug, noCount = false, showCount = true }) => {
     const incrementView = async () => {
       try {
         let { error } = await supabase.rpc("increment", {
-          slug_text:slug ,
+          slug_text:slug,
         });
 
         if (error){
