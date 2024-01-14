@@ -5,7 +5,6 @@ import { format, parseISO } from "date-fns";
 import Link from "next/link";
 import { slug } from "github-slugger";
 import ViewCounter from "./ViewCounter";
-import DownloadCounter from "./DownloadCounter";
 import { Plus, ShieldCheck } from "lucide-react";
 
 const BlogDetails = ({ blog, slug: blogSlug }) => {

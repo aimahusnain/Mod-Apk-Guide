@@ -1,5 +1,6 @@
 import BlogDetails from "@/src/components/Blog/BlogDetails";
 import RenderMdx from "@/src/components/Blog/RenderMdx";
+import StarRating from "@/src/components/Blog/StarRating";
 import Tag from "@/src/components/Elements/Tag";
 import siteMetadata from "@/src/utils/siteMetaData";
 import { allBlogs } from "contentlayer/generated";
@@ -8,6 +9,9 @@ import { Facebook, LucideTwitter } from "lucide-react";
 import Link from "next/link";
 import { FaWhatsapp } from "react-icons/fa";
 import { FaXTwitter } from "react-icons/fa6";
+import axios from 'axios';
+import ReviewForm from "@/src/components/Blog/ReviewForm"; // Import the ReviewForm component
+import ReviewList from "@/src/components/Blog/ReviewList"; // Import the ReviewList component
 
 export async function generateStaticParams() {
   return allBlogs.map((blog) => ({ slug: blog._raw.flattenedPath }));
@@ -60,6 +64,8 @@ export async function generateMetadata({ params }) {
 }
 
 export default function BlogPage({ params }) {
+
+
   const blog = allBlogs.find((blog) => blog._raw.flattenedPath === params.slug);
 
   let imageList = [siteMetadata.socialBanner];
@@ -135,6 +141,9 @@ export default function BlogPage({ params }) {
             <span className="text-gray-500 text-sm mt-2">
               {blog.description}
             </span>
+
+<StarRating />
+
             <p className="mt-2 text-gray-600 text-sm">
               <RenderMdx extraclass=" tracking-wide py-6" blog={blog} />
             </p>
@@ -164,6 +173,10 @@ export default function BlogPage({ params }) {
               Download
             </button>
           </div>
+          <div className="reviews-section">
+        <ReviewForm />
+        <ReviewList />
+      </div>
         </div>
       </div>
       {/* <article>
